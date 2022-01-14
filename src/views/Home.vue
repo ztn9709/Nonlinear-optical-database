@@ -1,7 +1,6 @@
 <template>
   <div class="home">
-    <img class="logo" alt="Vue logo" src="../assets/logo_demo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App - test" />
+    <HelloWorld msg="欢迎访问磁相变材料数据库！- test" />
   </div>
 </template>
 
@@ -17,8 +16,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.logo {
-  width: 250px;
-}
-</style>
+<style scoped></style>

@@ -30,7 +30,7 @@ Icon.register({
       }]
   }
 })
-Vue.component('v-icon', Icon) 
+Vue.component('v-icon', Icon)
 
 Vue.config.productionTip = false
 new Vue({
