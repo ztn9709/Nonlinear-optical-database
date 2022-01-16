@@ -41,8 +41,8 @@
       <el-row :gutter="40" type="flex" justify="center">
         <el-col :span="16" style="background-color: white">
           <el-tabs v-model="activeName" type="border-card" :stretch="true">
-            <el-tab-pane v-for="(item, index) in expData.results" :key="item.title" :label="item.title" :name="'tab' + (index + 1)">
-              <div :id="'echart' + index" style="width: 900px; height: 600px"></div>
+            <el-tab-pane v-for="(item, index) in expData.results" :key="item.title" :label="item.title" :name="'tab' + index">
+              <div :id="'echart' + index" style="width: 100%; height: 600px"></div>
             </el-tab-pane>
           </el-tabs>
         </el-col>
@@ -67,7 +67,7 @@ export default {
     return {
       expData: [],
       echartsData: [],
-      activeName: 'tab1'
+      activeName: 'tab0'
     }
   },
   computed: {
@@ -91,30 +91,28 @@ export default {
       const { data: res } = await this.axios.get('api/material', { params: { formula: this.formula } })
       this.expData = res[0]
     },
-    // reset(tab, event) {
-    //   let id = 'echart' + parseInt(tab.index)
-    //   const obj = echarts.init(document.getElementById(id))
-    //   obj.resize()
-    // },
     initChart(data, index) {
-      let id = 'echart' + index
-      const myChart = echarts.init(document.getElementById(id))
+      const myTab = document.getElementById('tab-tab' + index)
+      const myChart = echarts.init(document.getElementById('echart' + index))
       var option = {
         title: {
-          text: data.title + '    condition: ' + data.comment,
-
+          text: data.title,
           textStyle: {
-            width: 100
-          }
+            fontWeight: 700,
+            fontSize: '26px'
+          },
+          left: 'center'
         },
         // tooltip: {
         //   trigger: 'item'
         // },
         grid: {
           left: '5%',
-          right: '5%',
+          right: '10%',
           bottom: '5%',
-          containLabel: true
+          top: '10%',
+          containLabel: true,
+          show: true
         },
         toolbox: {
           feature: {
@@ -123,28 +121,45 @@ export default {
         },
         legend: {
           orient: 'vertical',
-          right: 40,
-          top: 60
+          right: '10%',
+          top: '10%',
+          selector: ['all', 'inverse'],
+          selectorLabel: {
+            backgroundColor: 'grey',
+            color: '#fff'
+          }
         },
         xAxis: {
           splitLine: {
             show: false
           },
-          // axisLine: {
-          //   symbol: ['none', 'arrow']
-          // },
           type: 'value',
-          name: data.xAxis
+          name: data.title.split('-')[0] + '(' + data.xAxis + ')',
+          nameLocation: 'center',
+          nameTextStyle: {
+            fontWeight: '400',
+            fontSize: '18px'
+          },
+          nameGap: 25,
+          axisTick: {
+            inside: true
+          }
         },
         yAxis: {
           splitLine: {
             show: false
           },
-          // axisLine: {
-          //   symbol: ['none', 'arrow']
-          // },
           type: 'value',
-          name: data.yAxis
+          name: data.title.split('-')[1] + '(' + data.yAxis + ')',
+          nameLocation: 'center',
+          nameTextStyle: {
+            fontWeight: '400',
+            fontSize: '18px'
+          },
+          nameGap: 40,
+          axisTick: {
+            inside: true
+          }
         },
         series: data.components.map(i => {
           return {
@@ -159,6 +174,9 @@ export default {
       myChart.setOption(option)
       //随着屏幕大小调节图表
       window.addEventListener('resize', () => {
+        myChart.resize()
+      })
+      myTab.addEventListener('click', () => {
         myChart.resize()
       })
     }
