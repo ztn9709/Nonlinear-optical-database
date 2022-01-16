@@ -27,6 +27,12 @@ const routes = [
     path: '/awesome',
     name: 'AweSome',
     component: () => import('../views/AweSome.vue')
+  },
+  {
+    path: '/display/:formula',
+    name: 'Display',
+    props: true,
+    component: () => import('@/views/Display.vue')
   }
 ]
 

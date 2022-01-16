@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link>|
-      <router-link to="/index">Index</router-link>|
-      <router-link to="/echarts">Echarts</router-link>|
+      <router-link to="/">Home</router-link>| <router-link to="/index">Index</router-link>| <router-link to="/echarts">Echarts</router-link>|
       <router-link to="/awesome">AweSome</router-link>
     </div>
     <router-view />
@@ -37,17 +35,6 @@ body {
   color: #42b983;
 }
 
-
-@media only screen and (max-width: 768px) {
-  .sm-hide {
-    display: none !important;
-  }
-}
-@media only screen and (min-width: 768px) {
-  .sm-show {
-    display: none !important;
-  }
-}
 .el-menu--horizontal .el-menu--popup li {
   left: 0 !important;
   width: 100%;
