@@ -1,9 +1,12 @@
 <template>
   <!-- 上中(左右右主)下基本布局 -->
   <el-container direction="vertical">
+    <!-- 头部与标题 -->
     <base-header></base-header>
     <h1>Data for {{ formula }}</h1>
+    <!-- 主要信息栏 -->
     <el-main style="padding: 0; margin: 0; overflow-x: hidden" class="main-container">
+      <!-- 第一行，基本信息 -->
       <el-row :gutter="40" type="flex" justify="center">
         <el-col :span="8" style="background-color: white">
           <div>
@@ -14,18 +17,28 @@
                   <td style="width: 50%" class="info_table_key">{{ key }}</td>
                   <td style="width: 50%">{{ val }}</td>
                 </tr>
-                <tr v-for="(val, key) in unit_cell_parameter">
-                  <td style="width: 50%" class="info_table_key">{{ key }}</td>
-                  <td style="width: 50%">{{ val }}</td>
-                </tr>
               </tbody>
             </table>
+            <br />
+            <h3>Lattice Parameters</h3>
+            <el-tabs v-model="activeNameb" :stretch="true">
+              <el-tab-pane v-for="(item, index) in unit_cell_parameter" :key="item.matter" :label="item.matter" :name="'latticeTab' + index">
+                <table class="info_table">
+                  <tbody>
+                    <tr v-for="(val, key) in unit_cell_parameter[index].data">
+                      <td style="width: 50%" class="info_table_key">{{ key }}</td>
+                      <td style="width: 50%">{{ val }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </el-tab-pane>
+            </el-tabs>
           </div>
         </el-col>
         <el-col :span="8" style="background-color: white">
           <div>
             <h3>Material Parameters</h3>
-            <el-table :data="[expData]" border style="width: 100%">
+            <el-table :data="[matData]" border style="width: 100%">
               <el-table-column label="ID" style="width: 50%" prop="id"> </el-table-column>
               <el-table-column prop="exactFormula" label="Formula" style="width: 50%"></el-table-column>
             </el-table>
@@ -38,10 +51,11 @@
           </div>
         </el-col>
       </el-row>
+      <!-- 第二行，Echarts图表 -->
       <el-row :gutter="40" type="flex" justify="center">
         <el-col :span="16" style="background-color: white">
           <el-tabs v-model="activeName" type="border-card" :stretch="true">
-            <el-tab-pane v-for="(item, index) in expData.results" :key="item.title" :label="item.title" :name="'tab' + index">
+            <el-tab-pane v-for="(item, index) in matData.results" :key="item.title" :label="item.title" :name="'echartsTab' + index">
               <div :id="'echart' + index" style="width: 100%; height: 600px"></div>
             </el-tab-pane>
           </el-tabs>
@@ -65,22 +79,23 @@ export default {
   props: ['formula'],
   data() {
     return {
-      expData: [],
+      matData: [],
       echartsData: [],
-      activeName: 'tab0'
+      activeName: 'echartsTab0',
+      activeNameb: 'latticeTab0'
     }
   },
   computed: {
     symmetry() {
-      if (Object.keys(this.expData).length !== 0) {
-        return this.expData.structure.symmetry
+      if (Object.keys(this.matData).length !== 0) {
+        return this.matData.structure.symmetry
       } else {
         return {}
       }
     },
     unit_cell_parameter() {
-      if (Object.keys(this.expData).length !== 0) {
-        return this.expData.structure.unit_cell_parameter
+      if (Object.keys(this.matData).length !== 0) {
+        return this.matData.structure.unit_cell_parameter
       } else {
         return {}
       }
@@ -89,10 +104,10 @@ export default {
   methods: {
     async fetchData() {
       const { data: res } = await this.axios.get('api/material', { params: { formula: this.formula } })
-      this.expData = res[0]
+      this.matData = res[0]
     },
     initChart(data, index) {
-      const myTab = document.getElementById('tab-tab' + index)
+      const myTab = document.getElementById('tab-echartsTab' + index)
       const myChart = echarts.init(document.getElementById('echart' + index))
       var option = {
         title: {
@@ -103,25 +118,43 @@ export default {
           },
           left: 'center'
         },
-        // tooltip: {
-        //   trigger: 'item'
-        // },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          },
+          position: ['80%', '40%']
+        },
         grid: {
           left: '5%',
-          right: '10%',
+          right: '6%',
           bottom: '5%',
           top: '10%',
           containLabel: true,
           show: true
         },
         toolbox: {
+          show: true,
+          orient: 'horizontal',
           feature: {
-            saveAsImage: {}
-          }
+            saveAsImage: {},
+            restore: {},
+            dataZoom: {
+              filterMode: 'none'
+            },
+            dataView: {
+              readOnly: true
+            }
+          },
+          right: '1%'
+        },
+        dataZoom: {
+          type: 'inside',
+          filterMode: 'none'
         },
         legend: {
           orient: 'vertical',
-          right: '10%',
+          right: '6%',
           top: '10%',
           selector: ['all', 'inverse'],
           selectorLabel: {
@@ -184,7 +217,7 @@ export default {
   async mounted() {
     await this.fetchData()
     await this.$nextTick(_ => {
-      this.expData.results.forEach((item, index) => {
+      this.matData.results.forEach((item, index) => {
         this.initChart(item, index)
       })
     })
@@ -227,5 +260,8 @@ td {
 /* 取消表格悬停高亮效果 */
 .el-table >>> tbody tr:hover > td {
   background-color: #ffffff !important;
+}
+.el-tabs--top >>> .el-tabs__header {
+  margin: 0 !important;
 }
 </style>
