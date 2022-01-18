@@ -43,6 +43,8 @@
           </el-input>
           <div style="color: red; float: left" v-show="inputWarning">Warning:Invalid input!</div>
           <el-divider></el-divider>
+          <PTable full class="mx-auto mb-5" :value="inputElements" @input="handlePTInput"></PTable>
+          <el-divider></el-divider>
           <el-table :data="expData" style="width: 100%" v-show="expData.length">
             <el-table-column label="ID" width="200">
               <template slot-scope="scope">
@@ -76,12 +78,14 @@
 <script>
 import BaseHeader from '@/components/BaseHeader.vue'
 import BaseFooter from '@/components/BaseFooter.vue'
+import PTable from '@/components/PTable/PTable.vue'
 
 export default {
   name: 'Home',
   components: {
     BaseHeader,
-    BaseFooter
+    BaseFooter,
+    PTable
   },
 
   data() {
@@ -115,7 +119,120 @@ export default {
       // colors: ['#eee', '#33aadd', '#00ccff'],
       inputInfo: '',
       inputWarning: false,
-      allElements: ['Co', 'Fe', 'Sn', 'S'],
+      allElements: [
+        'H',
+        'He',
+        'Li',
+        'Be',
+        'B',
+        'C',
+        'N',
+        'O',
+        'F',
+        'Ne',
+        'Na',
+        'Mg',
+        'Al',
+        'Si',
+        'P',
+        'S',
+        'Cl',
+        'Ar',
+        'K',
+        'Ca',
+        'Sc',
+        'Ti',
+        'V',
+        'Cr',
+        'Mn',
+        'Fe',
+        'Co',
+        'Ni',
+        'Cu',
+        'Zn',
+        'Ga',
+        'Ge',
+        'As',
+        'Se',
+        'Br',
+        'Kr',
+        'Rb',
+        'Sr',
+        'Y',
+        'Zr',
+        'Nb',
+        'Mo',
+        'Tc',
+        'Ru',
+        'Rh',
+        'Pd',
+        'Ag',
+        'Cd',
+        'In',
+        'Sn',
+        'Sb',
+        'Te',
+        'I',
+        'Xe',
+        'Cs',
+        'Ba',
+        'La',
+        'Ce',
+        'Pr',
+        'Nd',
+        'Pm',
+        'Sm',
+        'Eu',
+        'Gd',
+        'Tb',
+        'Dy',
+        'Ho',
+        'Er',
+        'Tm',
+        'Yb',
+        'Lu',
+        'Hf',
+        'Ta',
+        'W',
+        'Re',
+        'Os',
+        'Ir',
+        'Pt',
+        'Au',
+        'Hg',
+        'Tl',
+        'Pb',
+        'Bi',
+        'Po',
+        'At',
+        'Rn',
+        'Fr',
+        'Ra',
+        'Ac',
+        'Th',
+        'Pa',
+        'U',
+        'Np',
+        'Pu',
+        'Am',
+        'Cm',
+        'Bk',
+        'Cf',
+        'Es',
+        'Fm',
+        'Md',
+        'No',
+        'Lr',
+        'Rf',
+        'Db',
+        'Sg',
+        'Bh',
+        'Hs',
+        'Mt',
+        'Ds',
+        'Rg',
+        'Cn'
+      ],
       searchWay: 'exact',
       expData: []
     }
@@ -129,7 +246,6 @@ export default {
 
   methods: {
     async fetchData() {
-      this.expData = []
       if (this.inputInfo === '') {
         return
       }
@@ -138,13 +254,16 @@ export default {
         data.append('elements', this.inputElements)
         data.append('searchWay', this.searchWay)
         const { data: res } = await this.axios.post('api/material', data)
+        if (res.length === 0) {
+          return alert('无结果！')
+        }
         this.expData = res
       } else {
         alert('输入有误，请重新输入')
       }
     },
     showDetail(data) {
-      const url = '/display/' + data.formula
+      const url = '/materials/' + data.mid
       this.$router.push(url)
     },
     advice() {
@@ -155,6 +274,9 @@ export default {
           return this.allElements.includes(item)
         })
       }
+    },
+    handlePTInput(val) {
+      this.inputElements = val
     }
   }
 }

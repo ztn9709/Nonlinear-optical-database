@@ -3,7 +3,7 @@
   <el-container direction="vertical">
     <!-- 头部与标题 -->
     <base-header></base-header>
-    <h1>Data for {{ formula }}</h1>
+    <h1 v-html="title">Data for {{ matData.formula }}</h1>
     <!-- 主要信息栏 -->
     <el-main style="padding: 0; margin: 0; overflow-x: hidden" class="main-container">
       <!-- 第一行，基本信息 -->
@@ -39,7 +39,7 @@
           <div>
             <h3>Material Parameters</h3>
             <el-table :data="[matData]" border style="width: 100%">
-              <el-table-column label="ID" style="width: 50%" prop="id"> </el-table-column>
+              <el-table-column label="ID" style="width: 50%" prop="mid"> </el-table-column>
               <el-table-column prop="exact_formula" label="Formula" style="width: 50%"></el-table-column>
             </el-table>
             <el-card :body-style="{ padding: '0px' }" shadow="hover">
@@ -71,21 +71,18 @@ import BaseHeader from '@/components/BaseHeader.vue'
 import BaseFooter from '@/components/BaseFooter.vue'
 import * as echarts from 'echarts'
 export default {
-  name: 'Display',
+  name: 'Material',
   components: {
     BaseHeader,
     BaseFooter
   },
-  props: ['formula'],
+  props: ['mid'],
   data() {
     return {
-      matData: [],
-      echartsData: [],
+      matData: {},
       activeName: 'echartsTab0',
       activeNameb: 'latticeTab0',
-      timer: {
-        title: '防抖'
-      }
+      timer: {}
     }
   },
   computed: {
@@ -106,8 +103,8 @@ export default {
   },
   methods: {
     async fetchData() {
-      const { data: res } = await this.axios.get('api/material', { params: { formula: this.formula } })
-      this.matData = res[0]
+      const { data: res } = await this.axios.get('api/material', { params: { mid: this.mid } })
+      this.matData = res
     },
     initChart(data, index) {
       const myTab = document.getElementById('tab-echartsTab' + index)

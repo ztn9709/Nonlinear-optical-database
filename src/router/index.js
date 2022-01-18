@@ -29,10 +29,10 @@ const routes = [
     component: () => import('../views/AweSome.vue')
   },
   {
-    path: '/display/:formula',
-    name: 'Display',
+    path: '/materials/:mid',
+    name: 'Material',
     props: true,
-    component: () => import('@/views/Display.vue')
+    component: () => import('@/views/Material.vue')
   }
 ]
 
