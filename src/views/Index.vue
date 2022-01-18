@@ -34,18 +34,19 @@
           侧边栏待开发...
         </el-col>
         <el-col :span="20" class="main-container">
-          <el-input placeholder="请输入材料化学式" v-model.trim="inputFormula" class="input-with-select">
+          <el-input placeholder="请输入元素名称，以空格分隔" v-model="inputInfo" class="input-with-select" clearable @input="advice">
             <el-select v-model="searchWay" slot="prepend" placeholder="请选择">
-              <el-option label="Exactly Match Elements" :value="1"></el-option>
-              <el-option label="Include Match Elements" :value="2"></el-option>
+              <el-option label="Exactly Match Elements" value="exact"></el-option>
+              <el-option label="Include Match Elements" value="incl"></el-option>
             </el-select>
             <el-button slot="append" icon="el-icon-search" @click="fetchData"></el-button>
           </el-input>
+          <div style="color: red; float: left" v-show="inputWarning">Warning:Invalid input!</div>
           <el-divider></el-divider>
           <el-table :data="expData" style="width: 100%" v-show="expData.length">
             <el-table-column label="ID" width="200">
               <template slot-scope="scope">
-                <span>{{ scope.row.id }}</span>
+                <span>{{ scope.row.mid }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="formula" label="Formula" width="120"></el-table-column>
@@ -112,22 +113,48 @@ export default {
       //tableData: [],
       // value4: [],
       // colors: ['#eee', '#33aadd', '#00ccff'],
-      inputFormula: '',
-      searchWay: 1,
+      inputInfo: '',
+      inputWarning: false,
+      allElements: ['Co', 'Fe', 'Sn', 'S'],
+      searchWay: 'exact',
       expData: []
+    }
+  },
+
+  computed: {
+    inputElements() {
+      return this.inputInfo.trim().split(/\s+/)
     }
   },
 
   methods: {
     async fetchData() {
-      let data = new FormData()
-      data.append('formula', this.inputFormula)
-      const { data: res } = await this.axios.post('api/search', data)
-      this.expData = res
+      this.expData = []
+      if (this.inputInfo === '') {
+        return
+      }
+      if (!this.inputWarning) {
+        let data = new FormData()
+        data.append('elements', this.inputElements)
+        data.append('searchWay', this.searchWay)
+        const { data: res } = await this.axios.post('api/material', data)
+        this.expData = res
+      } else {
+        alert('输入有误，请重新输入')
+      }
     },
     showDetail(data) {
       const url = '/display/' + data.formula
       this.$router.push(url)
+    },
+    advice() {
+      if (this.inputInfo === '') {
+        this.inputWarning = false
+      } else {
+        this.inputWarning = !this.inputElements.every(item => {
+          return this.allElements.includes(item)
+        })
+      }
     }
   }
 }

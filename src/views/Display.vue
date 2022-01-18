@@ -40,7 +40,7 @@
             <h3>Material Parameters</h3>
             <el-table :data="[matData]" border style="width: 100%">
               <el-table-column label="ID" style="width: 50%" prop="id"> </el-table-column>
-              <el-table-column prop="exactFormula" label="Formula" style="width: 50%"></el-table-column>
+              <el-table-column prop="exact_formula" label="Formula" style="width: 50%"></el-table-column>
             </el-table>
             <el-card :body-style="{ padding: '0px' }" shadow="hover">
               <img src="@/assets/example.png" class="image" />
@@ -82,7 +82,10 @@ export default {
       matData: [],
       echartsData: [],
       activeName: 'echartsTab0',
-      activeNameb: 'latticeTab0'
+      activeNameb: 'latticeTab0',
+      timer: {
+        title: '防抖'
+      }
     }
   },
   computed: {
@@ -146,7 +149,7 @@ export default {
               readOnly: true
             }
           },
-          right: '1%'
+          right: '2%'
         },
         dataZoom: {
           type: 'inside',
@@ -206,8 +209,15 @@ export default {
       }
       myChart.setOption(option)
       //随着屏幕大小调节图表
+      let timerIndex = 'timer' + index
+      this.timer[timerIndex] = null
       window.addEventListener('resize', () => {
-        myChart.resize()
+        if (this.timer[timerIndex]) {
+          clearTimeout(this.timer[timerIndex])
+        }
+        this.timer[timerIndex] = setTimeout(() => {
+          myChart.resize()
+        }, 200)
       })
       myTab.addEventListener('click', () => {
         myChart.resize()
