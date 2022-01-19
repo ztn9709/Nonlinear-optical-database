@@ -31,10 +31,10 @@
             </el-form-item>
             <el-button type="default" style="width: 100%">Reset</el-button>
           </el-form> -->
-          侧边栏待开发...
+          数据库建设测试中...
         </el-col>
         <el-col :span="20" class="main-container">
-          <el-input placeholder="请输入元素名称，以空格分隔" v-model="inputInfo" class="input-with-select" clearable @input="advice">
+          <el-input placeholder="E.g. Co Sn S" v-model="inputInfo" class="input-with-select" clearable @input="advice">
             <el-select v-model="searchWay" slot="prepend" placeholder="请选择">
               <el-option label="Exactly Match Elements" value="exact"></el-option>
               <el-option label="Include Match Elements" value="incl"></el-option>

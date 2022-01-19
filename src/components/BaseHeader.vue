@@ -2,7 +2,7 @@
   <element>
     <el-header style="background-color: #43484d">
       <el-row type="flex" class="nav-menu" justify="start">
-        <img src="../assets/helloworld/element.svg" />
+        <el-link type="info" style="font-size: 20.35px; color: white" href="#/index">Magnetic Topological Materials</el-link>
         <el-menu class="sm-hide" :default-active="active_index" mode="horizontal" router background-color="#43484d" text-color="#fff" active-text-color="#ffd04b" style="margin-left: 10px">
           <template v-for="item in menu_items">
             <el-submenu :index="item.index" v-if="item.submenu" :disabled="item.disabled">
@@ -29,29 +29,29 @@ export default {
           submenu: false,
           disabled: false
         },
-        {
-          index: '2',
-          text: '模版组件',
-          submenu: true,
-          disabled: true,
-          items: [
-            {
-              index: '2-1',
-              text: '数据展示',
-              submenu: true
-            },
-            {
-              index: '/2-2',
-              text: '数据管理',
-              submenu: true
-            },
-            {
-              index: '2-3',
-              text: '登录/注册',
-              submenu: true
-            }
-          ]
-        },
+        // {
+        //   index: '2',
+        //   text: '模版组件',
+        //   submenu: true,
+        //   disabled: true,
+        //   items: [
+        //     {
+        //       index: '2-1',
+        //       text: '数据展示',
+        //       submenu: true
+        //     },
+        //     {
+        //       index: '/2-2',
+        //       text: '数据管理',
+        //       submenu: true
+        //     },
+        //     {
+        //       index: '2-3',
+        //       text: '登录/注册',
+        //       submenu: true
+        //     }
+        //   ]
+        // },
         {
           index: '3',
           text: '待开发',

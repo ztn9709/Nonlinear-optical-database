@@ -3,7 +3,7 @@
   <el-container direction="vertical">
     <!-- 头部与标题 -->
     <base-header></base-header>
-    <h1 v-html="title">Data for {{ matData.formula }}</h1>
+    <h1>Data for {{ matData.formula }}</h1>
     <!-- 主要信息栏 -->
     <el-main style="padding: 0; margin: 0; overflow-x: hidden" class="main-container">
       <!-- 第一行，基本信息 -->
@@ -45,7 +45,7 @@
             <el-card :body-style="{ padding: '0px' }" shadow="hover">
               <img src="@/assets/example.png" class="image" />
               <div style="padding: 14px">
-                <span>Primitive Cell</span>
+                <span>Conventional Cell</span>
               </div>
             </el-card>
           </div>
@@ -116,7 +116,8 @@ export default {
             fontWeight: 700,
             fontSize: '26px'
           },
-          left: 'center'
+          left: 'center',
+          subtext: data.comment
         },
         tooltip: {
           trigger: 'axis',
@@ -156,7 +157,10 @@ export default {
           orient: 'vertical',
           right: '6%',
           top: '10%',
-          selector: ['all', 'inverse'],
+          selector: [
+            { type: 'all', title: 'All' },
+            { type: 'inverse', title: 'Inverse' }
+          ],
           selectorLabel: {
             backgroundColor: 'grey',
             color: '#fff'
@@ -167,7 +171,7 @@ export default {
             show: false
           },
           type: 'value',
-          name: data.title.split('-')[0] + '(' + data.xAxis + ')',
+          name: data.title.split('-')[1] + '(' + data.xAxis + ')',
           nameLocation: 'center',
           nameTextStyle: {
             fontWeight: '400',
@@ -183,7 +187,7 @@ export default {
             show: false
           },
           type: 'value',
-          name: data.title.split('-')[1] + '(' + data.yAxis + ')',
+          name: data.title.split('-')[0] + '(' + data.yAxis + ')',
           nameLocation: 'center',
           nameTextStyle: {
             fontWeight: '400',
