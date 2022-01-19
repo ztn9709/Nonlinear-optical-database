@@ -11,7 +11,7 @@
             <h3>Structure Information</h3>
             <table class="info_table">
               <tbody>
-                <tr v-for="(val, key) in symmetry">
+                <tr v-for="(val, key) in matData.structure.symmetry">
                   <td style="width: 50%" class="info_table_key">{{ key }}</td>
                   <td style="width: 50%">{{ val }}</td>
                 </tr>
@@ -20,10 +20,10 @@
             <br />
             <h3>Lattice Parameters</h3>
             <el-tabs v-model="activeNameb" :stretch="true">
-              <el-tab-pane v-for="(item, index) in unit_cell_parameter" :key="item.matter" :label="item.matter" :name="'latticeTab' + index">
+              <el-tab-pane v-for="(item, index) in matData.structure.unit_cell_parameter" :key="item.matter" :label="item.matter" :name="'latticeTab' + index">
                 <table class="info_table">
                   <tbody>
-                    <tr v-for="(val, key) in unit_cell_parameter[index].data">
+                    <tr v-for="(val, key) in matData.structure.unit_cell_parameter[index].data">
                       <td style="width: 50%" class="info_table_key">{{ key }}</td>
                       <td style="width: 50%">{{ val }}</td>
                     </tr>
@@ -70,26 +70,15 @@ export default {
   props: ['mid'],
   data() {
     return {
-      matData: {},
+      matData: {
+        structure: {
+          symmetry: {},
+          unit_cell_parameter: {}
+        }
+      },
       activeName: 'echartsTab0',
       activeNameb: 'latticeTab0',
       timer: {}
-    }
-  },
-  computed: {
-    symmetry() {
-      if (Object.keys(this.matData).length !== 0) {
-        return this.matData.structure.symmetry
-      } else {
-        return {}
-      }
-    },
-    unit_cell_parameter() {
-      if (Object.keys(this.matData).length !== 0) {
-        return this.matData.structure.unit_cell_parameter
-      } else {
-        return {}
-      }
     }
   },
   methods: {
@@ -216,9 +205,9 @@ export default {
       })
     }
   },
-  async mounted() {
+  async created() {
     await this.fetchData()
-    await this.$nextTick(_ => {
+    this.$nextTick(_ => {
       this.matData.results.forEach((item, index) => {
         this.initChart(item, index)
       })
