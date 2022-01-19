@@ -41,9 +41,9 @@
             </el-select>
             <el-button slot="append" icon="el-icon-search" @click="fetchData"></el-button>
           </el-input>
-          <div style="color: red; float: left" v-show="inputWarning">Warning:Invalid input!</div>
+          <el-alert title="Invalid Input!" type="error" :closable="false" show-icon v-show="inputWarning"> </el-alert>
           <el-divider></el-divider>
-          <PTable full class="mx-auto mb-5" :value="inputElements" @input="handlePTInput"></PTable>
+          <PTable full :value="inputElements" @input="handlePTInput"></PTable>
           <el-divider></el-divider>
           <el-table :data="expData" style="width: 100%" v-show="expData.length">
             <el-table-column label="ID" width="200">
@@ -240,7 +240,9 @@ export default {
 
   computed: {
     inputElements() {
-      return this.inputInfo.trim().split(/\s+/)
+      let eles = this.inputInfo.trim().split(/\s+/)
+      eles = [...new Set(eles)]
+      return eles
     }
   },
 
@@ -255,7 +257,7 @@ export default {
         data.append('searchWay', this.searchWay)
         const { data: res } = await this.axios.post('api/material', data)
         if (res.length === 0) {
-          return alert('无结果！')
+          this.$message.error('搜索失败，无结果！')
         }
         this.expData = res
       } else {
@@ -276,7 +278,7 @@ export default {
       }
     },
     handlePTInput(val) {
-      this.inputElements = val
+      this.inputInfo = val.join(' ')
     }
   }
 }

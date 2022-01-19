@@ -1,18 +1,18 @@
 <template>
-  <div :class="{'ptable':true, 'ptable-full':full}">
+  <div :class="{ ptable: true, 'ptable-full': full }">
     <div class="ptable-main">
-      <div :class="{'ptable-row':true, 'ptable-row-full':full}" v-for="i in 7">
+      <div :class="{ 'ptable-row': true, 'ptable-row-full': full }" v-for="i in 7">
         <div :class="classes(i, j)" v-for="j in 18" @click="clickCell(i, j)">
-          <i :class="{'element-id':true, 'element-id-full':full}" @mousedown.stop.prevent>{{ index(i, j)}}</i>
-          <strong :class="{'element-symbol':true, 'element-symbol-full':full}" @mousedown.stop.prevent>{{ symbol(i, j) }}</strong>
+          <i :class="{ 'element-id': true, 'element-id-full': full }" @mousedown.stop.prevent>{{ index(i, j) }}</i>
+          <strong :class="{ 'element-symbol': true, 'element-symbol-full': full }" @mousedown.stop.prevent>{{ symbol(i, j) }}</strong>
         </div>
       </div>
     </div>
     <div class="ptable-LaAc">
-      <div :class="{'ptable-row':true, 'ptable-row-full':full}" v-for="i in [8, 9]">
+      <div :class="{ 'ptable-row': true, 'ptable-row-full': full }" v-for="i in [8, 9]">
         <div :class="classes(i, j)" v-for="j in 15" @click="clickCell(i, j)">
-          <i :class="{'element-id':true, 'element-id-full':full}" @mousedown.stop.prevent>{{ index(i, j)}}</i>
-          <strong :class="{'element-symbol':true, 'element-symbol-full':full}" @mousedown.stop.prevent>{{ symbol(i, j) }}</strong>
+          <i :class="{ 'element-id': true, 'element-id-full': full }" @mousedown.stop.prevent>{{ index(i, j) }}</i>
+          <strong :class="{ 'element-symbol': true, 'element-symbol-full': full }" @mousedown.stop.prevent>{{ symbol(i, j) }}</strong>
         </div>
       </div>
     </div>
@@ -20,133 +20,116 @@
 </template>
 
 <script>
-  import {cells, symbolToObj} from './PTableData.js'
+import { cells, symbolToObj } from './PTableData.js'
 
-  export default {
-    name: 'PTable',
+export default {
+  name: 'PTable',
 
-    componentName: 'PTable',
+  props: {
+    value: Array,
+    full: Boolean
+  },
 
-    components: {
-    },
-
-    props: {
-      value: Array,
-      min: Number,
-      max: Number,
-      full: Boolean
-    },
-
-    data () {
-      return {
-        elems: this.value,
-        isActive: Array(104),
-        oldValue: []
-      }
-    },
-
-    methods: {
-      getArray: function (min, max) {
-        let a = [min]
-        while (min < max) {
-          min++
-          a.push(min)
-        }
-        return a
-      },
-
-      handleClick (elem) {
-        console.log(elem)
-        let i = elem.ind
-        this.isActive[i] = !this.isActive[i]
-        let ind = this.elems.indexOf(elem.symbol)
-        if (ind === -1) {
-          let isLimitExceeded = false
-          this.min !== undefined && this.elems.length < this.min && (isLimitExceeded = true)
-          this.max !== undefined && this.elems.length > this.max && (isLimitExceeded = true)
-          isLimitExceeded === false && this.elems.push(elem.symbol)
-        } else {
-          this.elems.splice(ind, 1)
-        }
-        this.$emit('input', this.elems)
-      },
-
-      classes (i, j) {
-        let rtn = {}
-        let cell = cells[(i - 1) * 18 + j - 1]
-        if (cell == null) {
-          rtn = {
-            'ptable-cell': true,
-            'ptable-cell-blank': true
-          }
-        } else if (cell.symbol.length > 2) {
-          rtn = {
-            'ptable-cell': true,
-            'ptable-cell-LaAc': true,
-            'disabled': true
-          }
-        } else {
-          rtn = {
-            'ptable-cell': true,
-            'active': this.isActive[cell.ind]
-          }
-        }
-        if (this.full) {
-          rtn['ptable-cell-full'] = true
-        }
-        return rtn
-      },
-
-      index (i, j) {
-        let cell = cells[(i - 1) * 18 + j - 1]
-        if (cell == null) {
-          return ''
-        }
-        return cell.ind
-      },
-
-      symbol (i, j) {
-        let cell = cells[(i - 1) * 18 + j - 1]
-        if (cell == null) {
-          return ''
-        }
-        return cell.symbol
-      },
-
-      clickCell (i, j) {
-        let cell = cells[(i - 1) * 18 + j - 1]
-        if (cell && cell.symbol.length < 3) {
-          this.handleClick(cell)
-        }
-      }
-    },
-
-    watch: {
-      value (newValue) {
-        this.elems = newValue
-        newValue.forEach((symbol, index) => {
-          let elemObj = symbolToObj(symbol)
-          if (elemObj === undefined) return
-          let i = this.oldValue.indexOf(symbol)
-          if (i === -1) { // if not in old list, make it active
-            this.isActive.splice(elemObj.ind, 1, true)
-          } else { // if already in old list, remove it from the old list then do nothing
-            this.oldValue.splice(i, 1)
-          }
-        })
-        this.oldValue.forEach(symbol => { // for those in old list but not in new list, make inactive
-          let elemObj = symbolToObj(symbol)
-          if (elemObj === undefined) return
-          this.isActive.splice(elemObj.ind, 1, false)
-        })
-        this.oldValue = newValue.slice()
-      }
-    },
-
-    created () {
-      this.isActive.fill(false)
+  data() {
+    return {
+      elems: this.value,
+      isActive: Array(104),
+      oldValue: []
     }
+  },
+
+  methods: {
+    handleClick(elem) {
+      let i = elem.ind
+      this.isActive[i] = !this.isActive[i]
+      let ind = this.elems.indexOf(elem.symbol)
+      if (ind === -1) {
+        this.elems.push(elem.symbol)
+      } else {
+        this.elems.splice(ind, 1)
+      }
+      this.$emit('input', this.elems)
+    },
+
+    classes(i, j) {
+      let rtn = {}
+      let cell = cells[(i - 1) * 18 + j - 1]
+      if (cell == null) {
+        rtn = {
+          'ptable-cell': true,
+          'ptable-cell-blank': true
+        }
+      } else if (cell.symbol.length > 2) {
+        rtn = {
+          'ptable-cell': true,
+          'ptable-cell-LaAc': true,
+          disabled: true
+        }
+      } else {
+        rtn = {
+          'ptable-cell': true,
+          active: this.isActive[cell.ind]
+        }
+      }
+      if (this.full) {
+        rtn['ptable-cell-full'] = true
+      }
+      return rtn
+    },
+
+    index(i, j) {
+      let cell = cells[(i - 1) * 18 + j - 1]
+      if (cell == null) {
+        return ''
+      }
+      return cell.ind
+    },
+
+    symbol(i, j) {
+      let cell = cells[(i - 1) * 18 + j - 1]
+      if (cell == null) {
+        return ''
+      }
+      return cell.symbol
+    },
+
+    clickCell(i, j) {
+      let cell = cells[(i - 1) * 18 + j - 1]
+      if (cell && cell.symbol.length < 3) {
+        this.handleClick(cell)
+      }
+    }
+  },
+
+  watch: {
+    value(newValue) {
+      this.elems = newValue
+      newValue.forEach((symbol, index) => {
+        let elemObj = symbolToObj(symbol)
+        if (elemObj === undefined) return
+        let i = this.oldValue.indexOf(symbol)
+        if (i === -1) {
+          // if not in old list, make it active
+          this.isActive.splice(elemObj.ind, 1, true)
+        } else {
+          // if already in old list, remove it from the old list then do nothing
+          this.oldValue.splice(i, 1)
+        }
+      })
+      this.oldValue.forEach(symbol => {
+        // for those in old list but not in new list, make inactive
+        let elemObj = symbolToObj(symbol)
+        if (elemObj === undefined) return
+        this.isActive.splice(elemObj.ind, 1, false)
+      })
+      this.oldValue = newValue.slice()
+    }
+  },
+
+  created() {
+    this.isActive.fill(false)
   }
+}
 </script>
 
 <style>
@@ -164,8 +147,8 @@
   padding: 2px;
   cursor: pointer;
   z-index: 10;
-  border: 1px solid rgba(255,255,255,0);
-  background-color: #F7C331;
+  border: 1px solid rgba(255, 255, 255, 0);
+  background-color: #f7c331;
   background-clip: padding-box;
 }
 .ptable-cell-blank {
@@ -174,7 +157,7 @@
 }
 .active {
   /* background: #FADE98;*/
-  background-color: #F7882F;
+  background-color: #f7882f;
 }
 .disabled {
   cursor: default;
@@ -238,5 +221,4 @@
 .ptable-cell-LaAc .element-symbol-full {
   font-size: 14px;
 }
-
 </style>
