@@ -36,7 +36,7 @@
           <el-input placeholder="E.g. Co Sn S" v-model="inputInfo" class="input-with-select" clearable>
             <el-select v-model="searchWay" slot="prepend" placeholder="请选择">
               <el-option label="Exactly Match Elements" value="exact"></el-option>
-              <el-option label="Include Match Elements" value="incl"></el-option>
+              <el-option label="Include Elements" value="incl"></el-option>
             </el-select>
             <el-button slot="append" icon="el-icon-search" @click="fetchData"></el-button>
           </el-input>
