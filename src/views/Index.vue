@@ -1,7 +1,6 @@
 <template>
   <!-- 上中(左右右主)下基本布局 -->
   <el-container direction="vertical">
-    <base-header></base-header>
     <el-main style="padding: 0; margin: 0; overflow-x: hidden">
       <el-row style="background-color: rgb(255, 151, 82)">
         <el-col :span="4" class="sidebar-container">
@@ -34,7 +33,7 @@
           数据库建设测试中...
         </el-col>
         <el-col :span="20" class="main-container">
-          <el-input placeholder="E.g. Co Sn S" v-model="inputInfo" class="input-with-select" clearable @input="advice">
+          <el-input placeholder="E.g. Co Sn S" v-model="inputInfo" class="input-with-select" clearable>
             <el-select v-model="searchWay" slot="prepend" placeholder="请选择">
               <el-option label="Exactly Match Elements" value="exact"></el-option>
               <el-option label="Include Match Elements" value="incl"></el-option>
@@ -71,20 +70,15 @@
         </el-col>
       </el-row>
     </el-main>
-    <base-footer></base-footer>
   </el-container>
 </template>
 
 <script>
-import BaseHeader from '@/components/BaseHeader.vue'
-import BaseFooter from '@/components/BaseFooter.vue'
 import PTable from '@/components/PTable/PTable.vue'
 
 export default {
-  name: 'Home',
+  name: 'Index',
   components: {
-    BaseHeader,
-    BaseFooter,
     PTable
   },
 
@@ -118,7 +112,6 @@ export default {
       // value4: [],
       // colors: ['#eee', '#33aadd', '#00ccff'],
       inputInfo: '',
-      inputWarning: false,
       allElements: [
         'H',
         'He',
@@ -243,6 +236,15 @@ export default {
       let eles = this.inputInfo.trim().split(/\s+/)
       eles = [...new Set(eles)]
       return eles
+    },
+    inputWarning() {
+      if (this.inputInfo === '') {
+        return false
+      } else {
+        return !this.inputElements.every(item => {
+          return this.allElements.includes(item)
+        })
+      }
     }
   },
 
@@ -258,6 +260,8 @@ export default {
         const { data: res } = await this.axios.post('api/material', data)
         if (res.length === 0) {
           this.$message.error('搜索失败，无结果！')
+        } else {
+          this.$message.success('搜索成功！')
         }
         this.expData = res
       } else {
@@ -267,15 +271,6 @@ export default {
     showDetail(data) {
       const url = '/materials/' + data.mid
       this.$router.push(url)
-    },
-    advice() {
-      if (this.inputInfo === '') {
-        this.inputWarning = false
-      } else {
-        this.inputWarning = !this.inputElements.every(item => {
-          return this.allElements.includes(item)
-        })
-      }
     },
     handlePTInput(val) {
       this.inputInfo = val.join(' ')

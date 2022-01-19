@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       elems: this.value,
-      isActive: Array(104),
+      isActive: Array(113),
       oldValue: []
     }
   },

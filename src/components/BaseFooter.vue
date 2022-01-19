@@ -12,6 +12,7 @@
     </el-row>
   </el-footer>
 </template>
+
 <script>
 export default {
   name: 'BaseFooter'

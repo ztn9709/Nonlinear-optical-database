@@ -4,9 +4,22 @@
       <router-link to="/">Home</router-link>| <router-link to="/index">Index</router-link>| <router-link to="/echarts">Echarts</router-link>
       <router-link to="/awesome">AweSome</router-link>
     </div> -->
+    <base-header></base-header>
     <router-view />
+    <base-footer></base-footer>
   </div>
 </template>
+
+<script>
+import BaseHeader from '@/components/BaseHeader.vue'
+import BaseFooter from '@/components/BaseFooter.vue'
+export default {
+  components: {
+    BaseHeader,
+    BaseFooter
+  }
+}
+</script>
 
 <style>
 body {

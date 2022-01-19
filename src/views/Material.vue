@@ -1,8 +1,6 @@
 <template>
   <!-- 上中(左右右主)下基本布局 -->
   <el-container direction="vertical">
-    <!-- 头部与标题 -->
-    <base-header></base-header>
     <h1>Data for {{ matData.formula }}</h1>
     <!-- 主要信息栏 -->
     <el-main style="padding: 0; margin: 0; overflow-x: hidden" class="main-container">
@@ -56,26 +54,19 @@
         <el-col :span="16" style="background-color: white">
           <el-tabs v-model="activeName" type="border-card" :stretch="true">
             <el-tab-pane v-for="(item, index) in matData.results" :key="item.title" :label="item.title" :name="'echartsTab' + index">
-              <div :id="'echart' + index" style="width: 100%; height: 600px"></div>
+              <div :id="'echart' + index" style="width: 100%; height: 75vh"></div>
             </el-tab-pane>
           </el-tabs>
         </el-col>
       </el-row>
     </el-main>
-    <base-footer></base-footer>
   </el-container>
 </template>
 
 <script>
-import BaseHeader from '@/components/BaseHeader.vue'
-import BaseFooter from '@/components/BaseFooter.vue'
 import * as echarts from 'echarts'
 export default {
   name: 'Material',
-  components: {
-    BaseHeader,
-    BaseFooter
-  },
   props: ['mid'],
   data() {
     return {
@@ -171,7 +162,7 @@ export default {
             show: false
           },
           type: 'value',
-          name: data.title.split('-')[1] + '(' + data.xAxis + ')',
+          name: data.title.split('-')[1] + ' (' + data.xAxis + ')',
           nameLocation: 'center',
           nameTextStyle: {
             fontWeight: '400',
@@ -187,7 +178,7 @@ export default {
             show: false
           },
           type: 'value',
-          name: data.title.split('-')[0] + '(' + data.yAxis + ')',
+          name: data.title.split('-')[0] + ' (' + data.yAxis + ')',
           nameLocation: 'center',
           nameTextStyle: {
             fontWeight: '400',

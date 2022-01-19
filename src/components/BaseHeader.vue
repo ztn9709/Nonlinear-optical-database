@@ -29,41 +29,42 @@ export default {
           submenu: false,
           disabled: false
         },
-        // {
-        //   index: '2',
-        //   text: '模版组件',
-        //   submenu: true,
-        //   disabled: true,
-        //   items: [
-        //     {
-        //       index: '2-1',
-        //       text: '数据展示',
-        //       submenu: true
-        //     },
-        //     {
-        //       index: '/2-2',
-        //       text: '数据管理',
-        //       submenu: true
-        //     },
-        //     {
-        //       index: '2-3',
-        //       text: '登录/注册',
-        //       submenu: true
-        //     }
-        //   ]
-        // },
         {
-          index: '3',
-          text: '待开发',
-          submenu: false,
-          disabled: true
+          index: '2',
+          text: '其他',
+          submenu: true,
+          disabled: true,
+          items: [
+            {
+              index: '2-1',
+              text: '数据展示',
+              submenu: true
+            },
+            {
+              index: '/2-2',
+              text: '数据管理',
+              submenu: true
+            },
+            {
+              index: '2-3',
+              text: '登录/注册',
+              submenu: true
+            }
+          ]
+        },
+        {
+          index: '/echarts',
+          text: 'Echarts',
+          submenu: false
+          // disabled: true
         }
-      ],
-      active_index: '/index'
+      ]
     }
   },
-  mounted() {
-    this.active_index = this.$route.path
+  computed: {
+    active_index() {
+      return this.$route.path
+    }
   }
 }
 </script>
