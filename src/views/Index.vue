@@ -30,7 +30,7 @@
             </el-form-item>
             <el-button type="default" style="width: 100%">Reset</el-button>
           </el-form> -->
-          数据库建设测试中...
+          Testing...
         </el-col>
         <el-col :span="20" class="main-container">
           <el-input placeholder="E.g. Co Sn S" v-model="inputInfo" class="input-with-select" clearable>

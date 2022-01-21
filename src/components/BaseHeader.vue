@@ -2,7 +2,10 @@
   <element>
     <el-header style="background-color: #43484d">
       <el-row type="flex" class="nav-menu" justify="start">
-        <el-link type="info" style="font-size: 20.35px; color: white" href="#/index">Magnetic Topological Materials</el-link>
+        <a class="el-link" href="#/index">
+          <el-image :src="require('@/assets/logo.png')" style="width: 30px; height: 30px; padding-right: 5px"></el-image>
+          Magnetic Topological</a
+        >
         <el-menu class="sm-hide" :default-active="active_index" mode="horizontal" router background-color="#43484d" text-color="#fff" active-text-color="#ffd04b" style="margin-left: 10px">
           <template v-for="item in menu_items">
             <el-submenu :index="item.index" v-if="item.submenu" :disabled="item.disabled">
@@ -25,13 +28,13 @@ export default {
       menu_items: [
         {
           index: '/index',
-          text: '首页',
+          text: 'Search',
           submenu: false,
           disabled: false
         },
         {
           index: '2',
-          text: '其他',
+          text: 'Others',
           submenu: true,
           disabled: true,
           items: [
@@ -70,13 +73,20 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  width: 200px;
-}
 .nav-menu {
   border-bottom: solid 1px #e6e6e6 !important;
 }
 .nav-menu >>> .el-menu {
   border-bottom: 0;
+}
+.el-link {
+  font-size: 1.25rem;
+  color: white;
+}
+.el-header {
+  padding-left: 15px;
+}
+.sm-hide >>> li {
+  font-size: 1rem;
 }
 </style>
