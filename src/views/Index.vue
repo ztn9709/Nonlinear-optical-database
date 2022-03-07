@@ -33,7 +33,7 @@
           Testing...
         </el-col>
         <el-col :span="20" class="main-container">
-          <el-input placeholder="E.g. Co Sn S" v-model="inputInfo" class="input-with-select" clearable>
+          <el-input placeholder="E.g. Ta As" v-model="inputInfo" class="input-with-select" clearable>
             <el-select v-model="searchWay" slot="prepend" placeholder="请选择">
               <el-option label="Exactly Match Elements" value="exact"></el-option>
               <el-option label="Include Elements" value="incl"></el-option>
@@ -44,29 +44,25 @@
           <el-divider></el-divider>
           <PTable full :value="inputElements" @input="handlePTInput"></PTable>
           <el-divider></el-divider>
-          <el-table :data="expData" style="width: 100%" v-show="expData.length">
-            <el-table-column label="ID" width="200">
-              <template slot-scope="scope">
-                <span>{{ scope.row.mid }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="formula" label="Formula" width="120"></el-table-column>
-            <el-table-column label="Space group" width="120">
-              <template slot-scope="scope">
-                <span>{{ scope.row.structure.symmetry.space_group }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="Crystal System" min-width="200">
-              <template slot-scope="scope">
-                <span>{{ scope.row.structure.symmetry.crystal_system }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="Action" min-width="100">
-              <template slot-scope="scope">
-                <el-button type="success" @click="showDetail(scope.row)">Details</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+          <div v-show="expData.length" class="block">
+            <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next" :total="expData.length"></el-pagination>
+            <el-table :data="expData.slice((currentPage - 1) * 10, currentPage * 10)" style="width: 100%; max-width: 900px; margin: auto" :fit="true">
+              <el-table-column prop="id" label="ID"></el-table-column>
+              <el-table-column prop="formula" label="Formula"></el-table-column>
+              <el-table-column label="Space Group">
+                <template slot-scope="scope">
+                  <span>{{ scope.row.spacegroup.number }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="nsoc_dos_gap" label="NSOC Gap"></el-table-column>
+              <el-table-column prop="soc_dos_gap" label="SOC Gap"></el-table-column>
+              <el-table-column label="Action">
+                <template slot-scope="scope">
+                  <el-button type="success" @click="showDetail(scope.row)">Details</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
         </el-col>
       </el-row>
     </el-main>
@@ -227,7 +223,8 @@ export default {
         'Cn'
       ],
       searchWay: 'exact',
-      expData: []
+      expData: [],
+      currentPage: 1
     }
   },
 
@@ -269,11 +266,14 @@ export default {
       }
     },
     showDetail(data) {
-      const url = '/materials/' + data.mid
+      const url = '/materials/' + data.id
       this.$router.push(url)
     },
     handlePTInput(val) {
       this.inputInfo = val.join(' ')
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
     }
   }
 }
@@ -290,6 +290,9 @@ export default {
   max-width: calc(100% - 200px);
   min-height: 700px;
   padding: 60px;
+}
+.el-pagination {
+  text-align: end;
 }
 .card-demo {
   margin-bottom: 12px;

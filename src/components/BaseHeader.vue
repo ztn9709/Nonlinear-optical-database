@@ -1,10 +1,10 @@
 <template>
   <element>
-    <el-header style="background-color: #43484d">
+    <el-header style="background-color: #343a40">
       <el-row type="flex" class="nav-menu" justify="start">
         <a class="el-link" href="#/index">
           <el-image :src="require('@/assets/logo.png')" style="width: 30px; height: 30px; padding-right: 5px"></el-image>
-          Magnetic Topological</a
+          Nonlinear Optical</a
         >
         <el-menu class="sm-hide" :default-active="active_index" mode="horizontal" router background-color="#43484d" text-color="#fff" active-text-color="#ffd04b" style="margin-left: 10px">
           <template v-for="item in menu_items">
@@ -80,7 +80,7 @@ export default {
   border-bottom: 0;
 }
 .el-link {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   color: white;
 }
 .el-header {

@@ -3,9 +3,19 @@
   <el-container direction="vertical">
     <h1>Data for {{ matData.formula }}</h1>
     <!-- 主要信息栏 -->
-    <el-main style="padding: 0; margin: 0; overflow-x: hidden" class="main-container">
+    <el-main style="padding: 0; margin: 0; overflow-x: hidden; text-align: left" class="main-container">
       <!-- 第一行，基本信息 -->
       <el-row :gutter="40" type="flex" justify="center">
+        <el-col :span="16" style="background-color: white">
+          <h3>General Info</h3>
+          <el-table :data="[matData]" border style="width: 100%">
+            <el-table-column label="ID" style="width: 50%" prop="id"> </el-table-column>
+            <el-table-column prop="formula" label="Formula" style="width: 50%"></el-table-column>
+          </el-table>
+        </el-col>
+      </el-row>
+      <!-- 第二行 -->
+      <!-- <el-row :gutter="40" type="flex" justify="center">
         <el-col :span="8" style="background-color: white">
           <div>
             <h3>Structure Information</h3>
@@ -35,11 +45,6 @@
         </el-col>
         <el-col :span="8" style="background-color: white">
           <div>
-            <h3>Material Parameters</h3>
-            <el-table :data="[matData]" border style="width: 100%">
-              <el-table-column label="ID" style="width: 50%" prop="mid"> </el-table-column>
-              <el-table-column prop="exact_formula" label="Formula" style="width: 50%"></el-table-column>
-            </el-table>
             <el-card :body-style="{ padding: '0px' }" shadow="hover">
               <img src="@/assets/example.png" class="image" />
               <div style="padding: 14px">
@@ -48,9 +53,9 @@
             </el-card>
           </div>
         </el-col>
-      </el-row>
+      </el-row> -->
       <!-- 第二行，Echarts图表 -->
-      <el-row :gutter="40" type="flex" justify="center">
+      <!-- <el-row :gutter="40" type="flex" justify="center">
         <el-col :span="16" style="background-color: white">
           <el-tabs v-model="activeName" type="border-card" :stretch="true">
             <el-tab-pane v-for="(item, index) in matData.results" :key="item.title" :label="item.title" :name="'echartsTab' + index">
@@ -58,7 +63,7 @@
             </el-tab-pane>
           </el-tabs>
         </el-col>
-      </el-row>
+      </el-row> -->
     </el-main>
   </el-container>
 </template>
@@ -67,7 +72,7 @@
 import * as echarts from 'echarts'
 export default {
   name: 'Material',
-  props: ['mid'],
+  props: ['id'],
   data() {
     return {
       matData: {
@@ -83,135 +88,135 @@ export default {
   },
   methods: {
     async fetchData() {
-      const { data: res } = await this.axios.get('api/material', { params: { mid: this.mid } })
+      const { data: res } = await this.axios.get('api/material', { params: { id: this.id } })
       this.matData = res
-    },
-    initChart(data, index) {
-      const myTab = document.getElementById('tab-echartsTab' + index)
-      const myChart = echarts.init(document.getElementById('echart' + index))
-      var option = {
-        title: {
-          text: data.title,
-          textStyle: {
-            fontWeight: 700,
-            fontSize: '26px'
-          },
-          left: 'center',
-          subtext: data.comment
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          },
-          position: ['80%', '40%']
-        },
-        grid: {
-          left: '5%',
-          right: '6%',
-          bottom: '5%',
-          top: '10%',
-          containLabel: true,
-          show: true
-        },
-        toolbox: {
-          show: true,
-          orient: 'horizontal',
-          feature: {
-            saveAsImage: {},
-            restore: {},
-            dataZoom: {
-              filterMode: 'none'
-            },
-            dataView: {
-              readOnly: true
-            }
-          },
-          right: '2%'
-        },
-        dataZoom: {
-          type: 'inside',
-          filterMode: 'none'
-        },
-        legend: {
-          orient: 'vertical',
-          right: '6%',
-          top: '10%',
-          selector: [
-            { type: 'all', title: 'All' },
-            { type: 'inverse', title: 'Inverse' }
-          ],
-          selectorLabel: {
-            backgroundColor: 'grey',
-            color: '#fff'
-          }
-        },
-        xAxis: {
-          splitLine: {
-            show: false
-          },
-          type: 'value',
-          name: data.title.split('-')[1] + ' (' + data.xAxis + ')',
-          nameLocation: 'center',
-          nameTextStyle: {
-            fontWeight: '400',
-            fontSize: '18px'
-          },
-          nameGap: 25,
-          axisTick: {
-            inside: true
-          }
-        },
-        yAxis: {
-          splitLine: {
-            show: false
-          },
-          type: 'value',
-          name: data.title.split('-')[0] + ' (' + data.yAxis + ')',
-          nameLocation: 'center',
-          nameTextStyle: {
-            fontWeight: '400',
-            fontSize: '18px'
-          },
-          nameGap: 40,
-          axisTick: {
-            inside: true
-          }
-        },
-        series: data.components.map(i => {
-          return {
-            symbol: 'none',
-            name: i.matter,
-            type: 'line',
-            smooth: true,
-            data: i.line
-          }
-        })
-      }
-      myChart.setOption(option)
-      //随着屏幕大小调节图表
-      let timerIndex = 'timer' + index
-      this.timer[timerIndex] = null
-      window.addEventListener('resize', () => {
-        if (this.timer[timerIndex]) {
-          clearTimeout(this.timer[timerIndex])
-        }
-        this.timer[timerIndex] = setTimeout(() => {
-          myChart.resize()
-        }, 200)
-      })
-      myTab.addEventListener('click', () => {
-        myChart.resize()
-      })
     }
+    // initChart(data, index) {
+    //   const myTab = document.getElementById('tab-echartsTab' + index)
+    //   const myChart = echarts.init(document.getElementById('echart' + index))
+    //   var option = {
+    //     title: {
+    //       text: data.title,
+    //       textStyle: {
+    //         fontWeight: 700,
+    //         fontSize: '26px'
+    //       },
+    //       left: 'center',
+    //       subtext: data.comment
+    //     },
+    //     tooltip: {
+    //       trigger: 'axis',
+    //       axisPointer: {
+    //         type: 'cross'
+    //       },
+    //       position: ['80%', '40%']
+    //     },
+    //     grid: {
+    //       left: '5%',
+    //       right: '6%',
+    //       bottom: '5%',
+    //       top: '10%',
+    //       containLabel: true,
+    //       show: true
+    //     },
+    //     toolbox: {
+    //       show: true,
+    //       orient: 'horizontal',
+    //       feature: {
+    //         saveAsImage: {},
+    //         restore: {},
+    //         dataZoom: {
+    //           filterMode: 'none'
+    //         },
+    //         dataView: {
+    //           readOnly: true
+    //         }
+    //       },
+    //       right: '2%'
+    //     },
+    //     dataZoom: {
+    //       type: 'inside',
+    //       filterMode: 'none'
+    //     },
+    //     legend: {
+    //       orient: 'vertical',
+    //       right: '6%',
+    //       top: '10%',
+    //       selector: [
+    //         { type: 'all', title: 'All' },
+    //         { type: 'inverse', title: 'Inverse' }
+    //       ],
+    //       selectorLabel: {
+    //         backgroundColor: 'grey',
+    //         color: '#fff'
+    //       }
+    //     },
+    //     xAxis: {
+    //       splitLine: {
+    //         show: false
+    //       },
+    //       type: 'value',
+    //       name: data.title.split('-')[1] + ' (' + data.xAxis + ')',
+    //       nameLocation: 'center',
+    //       nameTextStyle: {
+    //         fontWeight: '400',
+    //         fontSize: '18px'
+    //       },
+    //       nameGap: 25,
+    //       axisTick: {
+    //         inside: true
+    //       }
+    //     },
+    //     yAxis: {
+    //       splitLine: {
+    //         show: false
+    //       },
+    //       type: 'value',
+    //       name: data.title.split('-')[0] + ' (' + data.yAxis + ')',
+    //       nameLocation: 'center',
+    //       nameTextStyle: {
+    //         fontWeight: '400',
+    //         fontSize: '18px'
+    //       },
+    //       nameGap: 40,
+    //       axisTick: {
+    //         inside: true
+    //       }
+    //     },
+    //     series: data.components.map(i => {
+    //       return {
+    //         symbol: 'none',
+    //         name: i.matter,
+    //         type: 'line',
+    //         smooth: true,
+    //         data: i.line
+    //       }
+    //     })
+    //   }
+    //   myChart.setOption(option)
+    //   //随着屏幕大小调节图表
+    //   let timerIndex = 'timer' + index
+    //   this.timer[timerIndex] = null
+    //   window.addEventListener('resize', () => {
+    //     if (this.timer[timerIndex]) {
+    //       clearTimeout(this.timer[timerIndex])
+    //     }
+    //     this.timer[timerIndex] = setTimeout(() => {
+    //       myChart.resize()
+    //     }, 200)
+    //   })
+    //   myTab.addEventListener('click', () => {
+    //     myChart.resize()
+    //   })
+    // }
   },
   async created() {
     await this.fetchData()
-    this.$nextTick(_ => {
-      this.matData.results.forEach((item, index) => {
-        this.initChart(item, index)
-      })
-    })
+    // this.$nextTick(_ => {
+    //   this.matData.results.forEach((item, index) => {
+    //     this.initChart(item, index)
+    //   })
+    // })
   }
 }
 </script>

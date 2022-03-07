@@ -22,7 +22,7 @@ const routes = [
   },
 
   {
-    path: '/materials/:mid',
+    path: '/materials/:id',
     name: 'Material',
     props: true,
     component: () => import('@/views/Material.vue')
