@@ -247,7 +247,6 @@ td {
   margin-right: 5%;
   margin-left: 5%;
   margin-bottom: 60px;
-  min-height: 500px;
 }
 .header {
   font-size: 1.35rem;

@@ -3,37 +3,9 @@
   <el-container direction="vertical">
     <el-main style="padding: 0; margin: 0; overflow-x: hidden">
       <el-row style="background-color: rgb(255, 151, 82)">
-        <el-col :span="4" class="sidebar-container">
-          <!-- <el-form label-position="top">
-            <el-form-item label="Space Group">
-              <el-select v-model="value1" multiple placeholder="请选择">
-                <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="价格区间">
-              <el-slider v-model="value2" range show-stops :step="10" :max="100"></el-slider>
-              <el-input type="number" v-model="value2[0]" disabled>
-                <template slot="prepend">¥</template>
-              </el-input>
-              <el-input type="number" v-model="value2[1]" disabled>
-                <template slot="prepend">¥</template>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="评价">
-              <el-switch v-model="is_value3"></el-switch>
-              <el-rate v-model="value3" :colors="colors" :disabled="!is_value3"></el-rate>
-            </el-form-item>
-            <el-form-item label="口味">
-              <el-select v-model="value4" multiple placeholder="请选择">
-                <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-button type="default" style="width: 100%">Reset</el-button>
-          </el-form> -->
-          Testing...
-        </el-col>
+        <el-col :span="4" class="sidebar-container"> Testing... </el-col>
         <el-col :span="20" class="main-container">
-          <el-input placeholder="E.g. Ta As" v-model="inputInfo" class="input-with-select" clearable>
+          <el-input placeholder="E.g. Ta As" v-model="inputInfo" clearable>
             <el-select v-model="searchWay" slot="prepend" placeholder="请选择">
               <el-option label="Exactly Match Elements" value="exact"></el-option>
               <el-option label="Include Elements" value="incl"></el-option>
@@ -80,33 +52,6 @@ export default {
 
   data() {
     return {
-      // options1: [
-      //   {
-      //     value: 'Guangdong',
-      //     label: '广东'
-      //   },
-      //   {
-      //     value: 'Beijing',
-      //     label: '北京'
-      //   }
-      // ],
-      // value1: [],
-      // value2: [0, 100],
-      // is_value3: false,
-      // value3: 3,
-      // options2: [
-      //   {
-      //     value: 'spicy',
-      //     label: '辣'
-      //   },
-      //   {
-      //     value: 'Beijing',
-      //     label: '甜'
-      //   }
-      // ],
-      //tableData: [],
-      // value4: [],
-      // colors: ['#eee', '#33aadd', '#00ccff'],
       inputInfo: '',
       allElements: [
         'H',
@@ -289,24 +234,21 @@ export default {
   background-color: white;
   max-width: calc(100% - 200px);
   min-height: 700px;
-  padding: 60px;
+  padding: 40px;
 }
 .el-pagination {
   text-align: end;
 }
-div >>> .el-menu--horizontal .el-menu--popup li {
-  left: 0 !important;
-  width: 100%;
+.el-input {
+  width: 864px;
 }
-div >>> .el-form-item__label {
-  font-size: 14px;
-  color: #fff;
-  padding-bottom: 0;
+.el-alert {
+  width: 864px;
+  margin: auto;
 }
 div >>> .el-input-group__prepend .el-select {
   background-color: rgb(255, 151, 82);
 }
-div >>> .el-input-group__append,
 div >>> .el-input-group__append .el-button {
   background-color: rgb(255, 151, 82);
   color: #fff;
