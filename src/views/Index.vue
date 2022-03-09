@@ -16,9 +16,8 @@
           <el-divider></el-divider>
           <PTable full :value="inputElements" @input="handlePTInput"></PTable>
           <el-divider></el-divider>
-          <div v-show="searchData.length">
-            <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next" :total="searchData.length"></el-pagination>
-            <el-table :data="searchData.slice((currentPage - 1) * 10, currentPage * 10)" style="width: 100%; max-width: 900px; margin: auto" :fit="true">
+          <div v-show="searchData.length" class="results" id="table">
+            <el-table :data="searchData.slice((currentPage - 1) * 10, currentPage * 10)" :fit="true">
               <el-table-column prop="id" label="ID"></el-table-column>
               <el-table-column prop="formula" label="Formula"></el-table-column>
               <el-table-column label="Space Group">
@@ -34,6 +33,7 @@
                 </template>
               </el-table-column>
             </el-table>
+            <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next" :total="searchData.length"></el-pagination>
           </div>
         </el-col>
       </el-row>
@@ -196,16 +196,14 @@ export default {
         return
       }
       if (!this.inputWarning) {
-        let data = new FormData()
-        data.append('elements', this.inputElements)
-        data.append('searchWay', this.searchWay)
-        const { data: res } = await this.axios.post('api/material', data)
+        const { data: res } = await this.axios.get('api/material', { params: { elements: this.inputElements, searchWay: this.searchWay } })
         if (res.length === 0) {
           this.$message.error('搜索失败，无结果！')
         } else {
           this.$message.success('搜索成功！')
         }
         this.searchData = res
+        document.querySelector('#table').scrollIntoView({ behavior: 'smooth', block: 'start' })
       } else {
         alert('输入有误，请重新输入')
       }
@@ -236,15 +234,20 @@ export default {
   min-height: 700px;
   padding: 40px;
 }
-.el-pagination {
-  text-align: end;
-}
 .el-input {
   width: 864px;
 }
 .el-alert {
   width: 864px;
   margin: auto;
+}
+.results {
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+}
+.el-pagination {
+  text-align: end;
 }
 div >>> .el-input-group__prepend .el-select {
   background-color: rgb(255, 151, 82);

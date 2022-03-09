@@ -140,7 +140,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      const { data: res } = await this.axios.get('api/material', { params: { id: this.id } })
+      const { data: res } = await this.axios.get('api/material/' + this.id)
       this.matData = res
     },
     initChart(data, index) {
