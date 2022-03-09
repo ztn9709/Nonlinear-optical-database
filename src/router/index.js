@@ -14,13 +14,6 @@ const routes = [
     name: 'Index',
     component: () => import('@/views/Index.vue')
   },
-
-  {
-    path: '/echarts',
-    name: 'Echarts',
-    component: () => import('@/views/Echarts.vue')
-  },
-
   {
     path: '/materials/:id',
     name: 'Material',

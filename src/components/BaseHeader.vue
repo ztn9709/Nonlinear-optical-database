@@ -54,12 +54,6 @@ export default {
               submenu: true
             }
           ]
-        },
-        {
-          index: '/echarts',
-          text: 'Echarts',
-          submenu: false
-          // disabled: true
         }
       ]
     }

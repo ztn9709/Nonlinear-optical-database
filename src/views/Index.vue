@@ -44,9 +44,9 @@
           <el-divider></el-divider>
           <PTable full :value="inputElements" @input="handlePTInput"></PTable>
           <el-divider></el-divider>
-          <div v-show="expData.length" class="block">
-            <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next" :total="expData.length"></el-pagination>
-            <el-table :data="expData.slice((currentPage - 1) * 10, currentPage * 10)" style="width: 100%; max-width: 900px; margin: auto" :fit="true">
+          <div v-show="searchData.length">
+            <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="10" layout="total, prev, pager, next" :total="searchData.length"></el-pagination>
+            <el-table :data="searchData.slice((currentPage - 1) * 10, currentPage * 10)" style="width: 100%; max-width: 900px; margin: auto" :fit="true">
               <el-table-column prop="id" label="ID"></el-table-column>
               <el-table-column prop="formula" label="Formula"></el-table-column>
               <el-table-column label="Space Group">
@@ -223,7 +223,7 @@ export default {
         'Cn'
       ],
       searchWay: 'exact',
-      expData: [],
+      searchData: [],
       currentPage: 1
     }
   },
@@ -260,7 +260,7 @@ export default {
         } else {
           this.$message.success('搜索成功！')
         }
-        this.expData = res
+        this.searchData = res
       } else {
         alert('输入有误，请重新输入')
       }
@@ -294,35 +294,18 @@ export default {
 .el-pagination {
   text-align: end;
 }
-.card-demo {
-  margin-bottom: 12px;
-  transition: all 0.3s ease-in-out;
-}
-.card-demo:hover {
-  transform: translateY(-8px);
-}
-.card-demo img {
-  height: 140px;
-}
-.card-demo p {
-  padding: 0 20px;
-}
-
 div >>> .el-menu--horizontal .el-menu--popup li {
   left: 0 !important;
   width: 100%;
 }
-
 div >>> .el-form-item__label {
   font-size: 14px;
   color: #fff;
   padding-bottom: 0;
 }
-
 div >>> .el-input-group__prepend .el-select {
   background-color: rgb(255, 151, 82);
 }
-
 div >>> .el-input-group__append,
 div >>> .el-input-group__append .el-button {
   background-color: rgb(255, 151, 82);
