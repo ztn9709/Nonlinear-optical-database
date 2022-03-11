@@ -17,16 +17,16 @@
           <PTable full :value="inputElements" @input="handlePTInput"></PTable>
           <el-divider></el-divider>
           <div v-show="searchData.length" class="results" id="table">
-            <el-table :data="searchData.slice((currentPage - 1) * 10, currentPage * 10)" :fit="true">
-              <el-table-column prop="id" label="ID"></el-table-column>
-              <el-table-column prop="formula" label="Formula"></el-table-column>
-              <el-table-column label="Space Group">
+            <el-table :data="searchData.slice((currentPage - 1) * 10, currentPage * 10)" :fit="true" @sort-change="changeSort">
+              <el-table-column prop="id" label="ID" sortable="custom"></el-table-column>
+              <el-table-column prop="formula" label="Formula" sortable="custom"></el-table-column>
+              <el-table-column prop="spacegroup" label="Space Group" sortable="custom">
                 <template slot-scope="scope">
                   <span>{{ scope.row.spacegroup.number }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="nsoc_dos_gap" label="NSOC Gap"></el-table-column>
-              <el-table-column prop="soc_dos_gap" label="SOC Gap"></el-table-column>
+              <el-table-column prop="nsoc_dos_gap" label="NSOC Gap" sortable="custom"></el-table-column>
+              <el-table-column prop="soc_dos_gap" label="SOC Gap" sortable="custom"></el-table-column>
               <el-table-column label="Action">
                 <template slot-scope="scope">
                   <el-button type="success" @click="showDetail(scope.row)">Details</el-button>
@@ -217,6 +217,36 @@ export default {
     },
     handleCurrentChange(val) {
       this.currentPage = val
+    },
+    changeSort(val) {
+      if (val.prop === 'spacegroup') {
+        // spacegroup单独排
+        if (val.order === 'ascending') {
+          this.searchData.sort((a, b) => a.spacegroup.number - b.spacegroup.number)
+        }
+        if (val.order === 'descending') {
+          this.searchData.sort((a, b) => b.spacegroup.number - a.spacegroup.number)
+        }
+      } else {
+        if (val.order === 'ascending') {
+          this.searchData.sort((a, b) => {
+            if (a[val.prop] > b[val.prop]) {
+              return 1
+            } else {
+              return -1
+            }
+          })
+        }
+        if (val.order === 'descending') {
+          this.searchData.sort((a, b) => {
+            if (a[val.prop] > b[val.prop]) {
+              return -1
+            } else {
+              return 1
+            }
+          })
+        }
+      }
     }
   }
 }
